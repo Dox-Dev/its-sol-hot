@@ -6,9 +6,16 @@ import { AnchorProvider, Program, web3 } from "@coral-xyz/anchor";
 // and metadata (which contains the account's deployed address)
 import type {Solhot} from "../../anchor/target/types/solhot";
 const Solhot_IDL: Solhot = require('../../anchor/target/idl/solhot.json');
+
 import {metadata} from "../../anchor/target/idl/solhot.json";
+const PUBLIC_ACCOUNT_ADDRESS = metadata.address;
 
 import {Slider} from "@nextui-org/react";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+library.add(faUser);
 
 
 export default function Home() {
@@ -53,9 +60,10 @@ export default function Home() {
   // PublicKey = so that we know which account we want to focus on
   // provider = optional, BUT we use this so we don't have to expose our private key
   function getSolHot(provider: AnchorProvider) {
+	console.log(PUBLIC_ACCOUNT_ADDRESS);
     return new Program<Solhot>(
       Solhot_IDL,
-      new web3.PublicKey(metadata.address),
+      new web3.PublicKey(PUBLIC_ACCOUNT_ADDRESS),
       provider
     );
   }
