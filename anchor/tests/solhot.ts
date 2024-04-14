@@ -13,7 +13,7 @@ describe("solhot", () => {
     const postKeypair = anchor.web3.Keypair.generate();
     // Add your test here.
     const tx = await program.methods
-    .initialize(1.0) // the message that's going to be put in the post account
+    .initialize(1) // the message that's going to be put in the post account
     .accounts({ 
       payer: provider.publicKey,
       systemProgram: anchor.web3.SystemProgram.programId,
