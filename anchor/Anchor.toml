@@ -11,7 +11,7 @@ solhot = "Gg1h1jVE4XN8z3ygbjsvPeTrqMiPnAyrFrJRHaVp4CfM"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "/Users/m1air/.config/solana/id.json"
 
 [scripts]
