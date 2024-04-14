@@ -76,7 +76,7 @@ export default function Home() {
     const anchorProvider = getAnchorProvider();
     const anoniDapp = getSolHot(anchorProvider);
     try {
-      const temp = await anoniDapp.account.post.all();
+      const temp = await anoniDapp.account.record.all();
       setrecords(temp);
     } catch (e) {
       alert(e);
