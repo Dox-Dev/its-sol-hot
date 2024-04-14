@@ -6,7 +6,7 @@ declare_id!("7hgP3DN1LsuaoHJEJ81iwqcHA6e4tsN2QdS5JFYdDUkn");
 pub mod solhot {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, temperature: u8) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, temperature: f32) -> Result<()> {
         let record: &mut Account<'_, Record>= &mut ctx.accounts.record;
         record.temperature = temperature;
         Ok(())
@@ -47,5 +47,5 @@ pub struct Initialize<'info> {
                         // dictates how much space you need
 pub struct Record { // account Record = similar to a table in SQL
     #[max_len(50)]
-    pub temperature: u8,
+    pub temperature: f32,
 }
