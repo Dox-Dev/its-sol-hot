@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("7hgP3DN1LsuaoHJEJ81iwqcHA6e4tsN2QdS5JFYdDUkn");
+declare_id!("Gg1h1jVE4XN8z3ygbjsvPeTrqMiPnAyrFrJRHaVp4CfM");
 
 #[program]
 pub mod solhot {
