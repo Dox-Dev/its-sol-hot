@@ -14,8 +14,8 @@ import {Slider} from "@nextui-org/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-library.add(faUser);
+import { faUser, faWallet, faArrowsRotate, faPlus} from '@fortawesome/free-solid-svg-icons';
+library.add(faUser, faWallet, faArrowsRotate, faPlus);
 
 import {Card, CardFooter, Image, Button} from "@nextui-org/react";
 
@@ -127,71 +127,150 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <button onClick={onConnectWallet} className="text-xs">
-        {connectedWallet ? connectedWallet : "Connect Wallet"}
-      </button>
-      {connectedWallet && <button onClick={onGetPosts}>Refresh</button>}
-      { //<input type="text" className="text-black" onChange={handleChange} value={temperature} />
-	  }
 
-	  <Slider   
-        size="sm"
-        step={1}
-        color="foreground"
-        label="Temperature"
-        showSteps={true} 
-        minValue={0}
-        maxValue={50}
-		getValue={(temperature) => `${temperature} °C`}
-        defaultValue={1}
-        className="max-w-md"
-		onChangeEnd={handleSliderChange}
-      />
-	  
-      <button onClick={onCreatePost}>Create Post</button>
+		{ // Upper part (Question Header, Connect Wallet, Refresh, Slider, Create Post)
+		window.innerWidth > SMALL_WINDOW_SIZE_IN_PX? (
+		<div id="top-elements-PARENT">
+			<div className="grid grid-rows-4 grid-flow-col max-w-2xl">
+				<div className="row-span-2 text-5xl">
+					So... how hot is it for you right now?
+				</div>
+				<div className="row-span-1 col-span-2">
+					<Slider size="lg"
+    				  		step={1}
+    				  		color="foreground"
+    				  		label="Temperature"
+    				  		showSteps={false} 
+    				  		minValue={0}
+    				  		maxValue={50}
+							getValue={(temperature) => `${temperature} °C`}
+    				  		defaultValue={1}
+    				  		className=""
+							onChangeEnd={handleSliderChange} />
+				</div>
+				<div className="row-span-1 col-span-2">
+					<Button onClick={onCreatePost} 
+							className="w-full bg-green-400 dark:bg-green-700" 
+							startContent={<FontAwesomeIcon 
+							icon={faPlus} />}>
+								Create Post
+					</Button>
+				</div>
+				<div className="col-span-1 self-start">
+				<Button onClick={onConnectWallet} 
+						className="bg-purple-400 dark:bg-purple-700 text-black/90 dark:text-white/90 items-center" 
+						startContent={<FontAwesomeIcon 
+						icon={faWallet} />}>
+    			  	{connectedWallet? 
+						`${connectedWallet.slice(0,4)}...${connectedWallet.slice(-4)}` : 
+						"Connect Wallet"
+					}
+    			</Button>  
+				</div>
+				<div className="col-span-1 self-start">
+    				{ // by doing it like this, we can shortcircuit the button to only appear once the wallet is connected via connectedWallet
+						connectedWallet && 
+						<div>
+							<Button onClick={onGetPosts} className="bg-indigo-400 dark:bg-indigo-700" startContent={<FontAwesomeIcon icon={faArrowsRotate} />}>Refresh</Button>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+		): (
+		<div id="bottom-elements-PARENT">
+			<div className="grid grid-col-2 grid-flow-row gap-4 max-w-2xl">
 
-	  <div className="grid grid-cols-2 sm:grid-cols-4  grid-flow-row gap-4">
-      {records.map((e: any) => {
-        return (
-          <div
-            key={e.publicKey.toString()}
-        	//className="bg-slate-900 p-5 rounded-lg flex flex-col gap-3"
-          >
-			{
-			<Card
-    		  isFooterBlurred
-    		  radius="lg"
-    		  className="border-none my-2"
-    		>
-				{
-    		  <Image
-    		    alt="Woman listing to music"
-    		    className="object-cover"
-    		    height={200}
-    		    src={`https://api.dicebear.com/8.x/identicon/svg?seed=${e.publicKey.toString()}`} //"/images/hero-card.jpeg"
-    		    width={200}
-    		  />
+				<div className="col-span-2 text-6xl">
+					So... how hot is it for you right now?
+				</div>
+
+				<div className="col-span-1 self-center">
+					<Button onClick={onConnectWallet} 
+							className="bg-purple-400 dark:bg-purple-700 text-black/90 dark:text-white/90 w-full" 
+							startContent={<FontAwesomeIcon 
+							icon={faWallet} />}>
+						{connectedWallet? 
+							`${connectedWallet.slice(0,4)}...${connectedWallet.slice(-4)}` : 
+							"Connect Wallet"
+						}
+					</Button>  
+				</div>
+
+				<div className="col-span-1">
+				{ // by doing it like this, we can shortcircuit the button to only appear once the wallet is connected via connectedWallet
+				  	connectedWallet && 
+				  	<div>
+						<Button onClick={onGetPosts} className="w-full bg-indigo-400 dark:bg-indigo-700" startContent={<FontAwesomeIcon icon={faArrowsRotate} />}>Refresh</Button>
+					</div>
 				}
-    		  <CardFooter className="justify-between before:bg-white/10 border-black/20 dark:border-white/20  border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-    		    <p className="text-tiny text-black/80 dark:text-white/80">{e.account.temperature} °C</p>
-				<a href={'https://explorer.solana.com/address/' + e.publicKey.toString() + '?cluster=devnet'} target="_blank">
-					{isSmallDesktop? (
-    		    		<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-    		    		  	Details
-    		    		</Button>
-					) : (
-						<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-    		    	  		Account Details
-    		    		</Button>
-					)}
-				</a>
-    		  </CardFooter>
-    		</Card>
-			}
-          </div>
-        );
-      })}
-	  </div>
+				</div>
+			  	<div className="col-span-2">
+			  	<Slider size="lg"
+						step={1}
+						color="foreground"
+						label="Temperature"
+						showSteps={false} 
+						minValue={0}
+						maxValue={50}
+					  	getValue={(temperature) => `${temperature} °C`}
+						defaultValue={1}
+						className=""
+					  	onChangeEnd={handleSliderChange} />
+			  	</div>
+			  	<div className="row-span-1 col-span-2">
+					<Button onClick={onCreatePost} 
+							className="w-full bg-green-400 dark:bg-green-700" 
+							startContent={<FontAwesomeIcon 
+							icon={faPlus} />}>
+								Create Post
+					</Button>
+				</div>
+			</div>
+							
+			</div>
+		)}
+
+		{ /* Bottom part (grid of Records) */ }
+		<div className="grid grid-cols-2 sm:grid-cols-4  grid-flow-row gap-4">
+    	{records.map((e: any) => {
+    	  return (
+    	    <div key={e.publicKey.toString()}>
+				{
+				<Card
+    			  isFooterBlurred
+    			  radius="lg"
+    			  className="border-none my-2"
+    			>
+					{
+    			  <Image
+    			    alt="Woman listing to music"
+    			    className="object-cover"
+    			    height={200}
+    			    src={`https://api.dicebear.com/8.x/identicon/svg?seed=${e.publicKey.toString()}`} //"/images/hero-card.jpeg"
+    			    width={200}
+    			  />
+					}
+    			  <CardFooter className="justify-between before:bg-white/10 border-black/20 dark:border-white/20  border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+    			    <p className="text-tiny text-black/80 dark:text-white/80">{e.account.temperature} °C</p>
+					<a href={'https://explorer.solana.com/address/' + e.publicKey.toString() + '?cluster=devnet'} target="_blank">
+						{isSmallDesktop? (
+    			    		<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+    			    		  	Details
+    			    		</Button>
+						) : (
+							<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+    			    	  		Account Details
+    			    		</Button>
+						)}
+					</a>
+    			  </CardFooter>
+    			</Card>
+				}
+    	    </div>
+    	  );
+    	})}
+		</div>
     </main>
   );
 }
