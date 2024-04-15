@@ -37,10 +37,10 @@ export default function Home() {
   // procs when button is clicked
   const onCreatePost = async () => {
     const anchorProvider = getAnchorProvider(); // signs transactions
-    const anoniDapp = getSolHot(getAnchorProvider()); // call function, which requires the anchorProvider
+    const SolhotDapp = getSolhot(getAnchorProvider()); // call function, which requires the anchorProvider
     const keypair = web3.Keypair.generate(); // the keypair is the post
     try {
-      const signature = await anoniDapp.methods
+      const signature = await SolhotDapp.methods
         .initialize(temperature)
         .accounts({
           record: keypair.publicKey,
@@ -57,10 +57,10 @@ export default function Home() {
   };
   
 
-  // DubiDapp_IDL = what are the instructions, what are the account structures
+  // Solhot_IDL = what are the instructions, what are the account structures
   // PublicKey = so that we know which account we want to focus on
   // provider = optional, BUT we use this so we don't have to expose our private key
-  function getSolHot(provider: AnchorProvider) {
+  function getSolhot(provider: AnchorProvider) {
 	console.log(PUBLIC_ACCOUNT_ADDRESS);
     return new Program<Solhot>(
       Solhot_IDL,
@@ -83,9 +83,9 @@ export default function Home() {
 
   const onGetPosts = async () => {
     const anchorProvider = getAnchorProvider();
-    const anoniDapp = getSolHot(anchorProvider);
+    const SolhotDapp = getSolhot(anchorProvider);
     try {
-      const temp = await anoniDapp.account.record.all();
+      const temp = await SolhotDapp.account.record.all();
       setrecords(temp);
     } catch (e) {
       alert(e);
