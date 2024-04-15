@@ -17,6 +17,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 library.add(faUser);
 
+import {Card, CardFooter, Image, Button} from "@nextui-org/react";
 
 export default function Home() {
   const [connectedWallet, setconnectedWallet] = useState<null | string>(null);
@@ -138,10 +139,33 @@ export default function Home() {
         return (
           <div
             key={e.publicKey.toString()}
-            className="bg-slate-900 p-5 rounded-lg flex flex-col gap-3"
+        	//className="bg-slate-900 p-5 rounded-lg flex flex-col gap-3"
           >
-            <p className="text-xs">{e.publicKey.toString()}</p>
-            <p>{e.account.content}</p>
+			{
+			<Card
+    		  isFooterBlurred
+    		  radius="lg"
+    		  className="border-none my-2"
+    		>
+				{
+    		  <Image
+    		    alt="Woman listing to music"
+    		    className="object-cover"
+    		    height={200}
+    		    src={`https://api.dicebear.com/8.x/identicon/svg?seed=${e.publicKey.toString()}`} //"/images/hero-card.jpeg"
+    		    width={200}
+    		  />
+				}
+    		  <CardFooter className="justify-between before:bg-white/10 border-black/20 dark:border-white/20  border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+    		    <p className="text-tiny text-black/80 dark:text-white/80">{e.account.temperature} °C</p>
+				<a href={'https://explorer.solana.com/address/' + e.publicKey.toString() + '?cluster=devnet'} target="_blank">
+    		    	<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+    		    	  Account Details
+    		    	</Button>
+				</a>
+    		  </CardFooter>
+    		</Card>
+			}
           </div>
         );
       })}
