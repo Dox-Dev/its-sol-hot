@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnchorProvider, Program, web3 } from "@coral-xyz/anchor";
 
 // import type of account, its IDL (similar to ABI in Arbitrum), 
@@ -110,6 +110,21 @@ export default function Home() {
 	}
   };
 
+  // for listening to screen size changes
+  const SMALL_WINDOW_SIZE_IN_PX = 640;
+  const [isSmallDesktop, setSmallDesktop] = useState(window.innerWidth > SMALL_WINDOW_SIZE_IN_PX);
+
+  const updateMedia = () => {
+    setSmallDesktop(SMALL_WINDOW_SIZE_IN_PX <= window.innerWidth && window.innerWidth < 1050);
+  };
+
+  // listener for when you resize the window
+  useEffect(() => {
+	console.log("window.innerWidth " + window.innerWidth);
+    window.addEventListener("resize", updateMedia);
+    return () => window.removeEventListener("resize", updateMedia);
+  });
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <button onClick={onConnectWallet} className="text-xs">
@@ -135,6 +150,7 @@ export default function Home() {
 	  
       <button onClick={onCreatePost}>Create Post</button>
 
+	  <div className="grid grid-cols-2 sm:grid-cols-4  grid-flow-row gap-4">
       {records.map((e: any) => {
         return (
           <div
@@ -159,9 +175,15 @@ export default function Home() {
     		  <CardFooter className="justify-between before:bg-white/10 border-black/20 dark:border-white/20  border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
     		    <p className="text-tiny text-black/80 dark:text-white/80">{e.account.temperature} °C</p>
 				<a href={'https://explorer.solana.com/address/' + e.publicKey.toString() + '?cluster=devnet'} target="_blank">
-    		    	<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-    		    	  Account Details
-    		    	</Button>
+					{isSmallDesktop? (
+    		    		<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+    		    		  	Details
+    		    		</Button>
+					) : (
+						<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
+    		    	  		Account Details
+    		    		</Button>
+					)}
 				</a>
     		  </CardFooter>
     		</Card>
@@ -169,6 +191,7 @@ export default function Home() {
           </div>
         );
       })}
+	  </div>
     </main>
   );
 }
