@@ -13,9 +13,7 @@ const PUBLIC_ACCOUNT_ADDRESS = metadata.address;
 import {Slider} from "@nextui-org/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUser, faWallet, faArrowsRotate, faPlus} from '@fortawesome/free-solid-svg-icons';
-library.add(faUser, faWallet, faArrowsRotate, faPlus);
+import { faWallet, faArrowsRotate, faPlus} from '@fortawesome/free-solid-svg-icons';
 
 import {Card, CardFooter, Image, Button} from "@nextui-org/react";
 
