@@ -319,7 +319,7 @@ export type Solhot = {
 	];
 	accounts: [
 	  {
-		name: "Record";
+		name: "record";
 		type: {
 		  kind: "struct";
 		  fields: [
