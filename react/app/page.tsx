@@ -85,7 +85,7 @@ export default function Home() {
     const anchorProvider = getAnchorProvider();
     const SolhotDapp = getSolhot(anchorProvider);
     try {
-      const temp = await SolhotDapp.account.record.all();
+      const temp = await SolhotDapp.account.Record.all();
       setrecords(temp);
     } catch (e) {
       alert(e);
@@ -283,7 +283,7 @@ export default function Home() {
   );
 }
 
-
+// CONSTANTS
 // I begrudgingly added these after I realized Vercel was
 // incapable of doing `anchor build` to locally build the IDL.
 export type Solhot = {
@@ -319,7 +319,7 @@ export type Solhot = {
 	];
 	accounts: [
 	  {
-		name: "record";
+		name: "Record";
 		type: {
 		  kind: "struct";
 		  fields: [
