@@ -1,14 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { AnchorProvider, Program, web3 } from "@coral-xyz/anchor";
 
 // import type of account, its IDL (similar to ABI in Arbitrum), 
 // and metadata (which contains the account's deployed address)
+/* // removed these mainly because Vercel didn't allow `anchor build`
 import type {Solhot} from "../../anchor/target/types/solhot";
 const Solhot_IDL: Solhot = require('../../anchor/target/idl/solhot.json');
 
 import {metadata} from "../../anchor/target/idl/solhot.json";
 const PUBLIC_ACCOUNT_ADDRESS = metadata.address;
+*/
 
 import {Slider} from "@nextui-org/react";
 
@@ -108,26 +110,34 @@ export default function Home() {
 	}
   };
 
-  // for listening to screen size changes
-  const SMALL_WINDOW_SIZE_IN_PX = 640;
-  const [isSmallDesktop, setSmallDesktop] = useState(window.innerWidth > SMALL_WINDOW_SIZE_IN_PX);
+	// Used for responsiveness of website, for rearranging layout
+	const SMALL_WINDOW_SIZE_IN_PX = 640;
+	let isSmallDesktop: boolean = true; let setSmallDesktop: Dispatch<SetStateAction<boolean>>;
+	let isMediumDesktop: boolean; let setMediumDesktop: Dispatch<SetStateAction<boolean>>;
+	if(typeof window !== "undefined") {
+		[isSmallDesktop, setSmallDesktop] = useState(window.innerWidth > SMALL_WINDOW_SIZE_IN_PX);
+		[isMediumDesktop, setMediumDesktop] = useState(SMALL_WINDOW_SIZE_IN_PX <= window.innerWidth && window.innerWidth < 1050);
 
-  const updateMedia = () => {
-    setSmallDesktop(SMALL_WINDOW_SIZE_IN_PX <= window.innerWidth && window.innerWidth < 1050);
-  };
+		const updateMedia = () => {
+			setSmallDesktop(window.innerWidth > SMALL_WINDOW_SIZE_IN_PX);
+			setMediumDesktop(SMALL_WINDOW_SIZE_IN_PX <= window.innerWidth && window.innerWidth < 1050);
+		};
+	
 
-  // listener for when you resize the window
-  useEffect(() => {
-	console.log("window.innerWidth " + window.innerWidth);
-    window.addEventListener("resize", updateMedia);
-    return () => window.removeEventListener("resize", updateMedia);
-  });
+		// listener for when you resize the window
+		useEffect(() => {
+			console.log("window.innerWidth: " + window.innerWidth);
+			window.addEventListener("resize", updateMedia);
+			return () => window.removeEventListener("resize", updateMedia);
+		});	
+	}
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
 
 		{ // Upper part (Question Header, Connect Wallet, Refresh, Slider, Create Post)
-		window.innerWidth > SMALL_WINDOW_SIZE_IN_PX? (
+		isSmallDesktop? 
+		(
 		<div id="top-elements-PARENT">
 			<div className="grid grid-rows-4 grid-flow-col max-w-2xl">
 				<div className="row-span-2 text-5xl">
@@ -252,7 +262,7 @@ export default function Home() {
     			  <CardFooter className="justify-between before:bg-white/10 border-black/20 dark:border-white/20  border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
     			    <p className="text-tiny text-black/80 dark:text-white/80">{e.account.temperature} °C</p>
 					<a href={'https://explorer.solana.com/address/' + e.publicKey.toString() + '?cluster=devnet'} target="_blank">
-						{isSmallDesktop? (
+						{isMediumDesktop? (
     			    		<Button className="text-tiny bg-white/20 dark:bg-black/20" variant="flat" color="default" radius="lg" size="sm">
     			    		  	Details
     			    		</Button>
@@ -272,3 +282,109 @@ export default function Home() {
     </main>
   );
 }
+
+
+// I begrudgingly added these after I realized Vercel was
+// incapable of doing `anchor build` to locally build the IDL.
+export type Solhot = {
+	version: "0.1.0";
+	name: "solhot";
+	instructions: [
+	  {
+		name: "initialize";
+		accounts: [
+		  {
+			name: "payer";
+			isMut: true;
+			isSigner: true;
+		  },
+		  {
+			name: "record";
+			isMut: true;
+			isSigner: true;
+		  },
+		  {
+			name: "systemProgram";
+			isMut: false;
+			isSigner: false;
+		  }
+		];
+		args: [
+		  {
+			name: "temperature";
+			type: "u8";
+		  }
+		];
+	  }
+	];
+	accounts: [
+	  {
+		name: "Record";
+		type: {
+		  kind: "struct";
+		  fields: [
+			{
+				name: "temperature";
+				type: "u8";
+			}
+		  ];
+		};
+	  }
+	];
+	metadata: {
+			address:string
+	}
+	
+};
+
+export const Solhot_IDL: Solhot = {
+	"version": "0.1.0",
+	"name": "solhot",
+	"instructions": [
+	  {
+		"name": "initialize",
+		"accounts": [
+		  {
+			"name": "payer",
+			"isMut": true,
+			"isSigner": true
+		  },
+		  {
+			"name": "record",
+			"isMut": true,
+			"isSigner": true
+		  },
+		  {
+			"name": "systemProgram",
+			"isMut": false,
+			"isSigner": false
+		  }
+		],
+		"args": [
+		  {
+			"name": "temperature",
+			"type": "u8"
+		  }
+		]
+	  }
+	],
+	"accounts": [
+	  {
+		"name": "Record",
+		"type": {
+		  "kind": "struct",
+		  "fields": [
+			{
+			  "name": "temperature",
+			  "type": "u8"
+			}
+		  ]
+		}
+	  }
+	],
+	"metadata": {
+	  "address": "Gg1h1jVE4XN8z3ygbjsvPeTrqMiPnAyrFrJRHaVp4CfM"
+	}
+  }
+
+  const PUBLIC_ACCOUNT_ADDRESS:string = Solhot_IDL.metadata.address;
