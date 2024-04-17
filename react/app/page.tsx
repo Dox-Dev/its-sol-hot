@@ -85,7 +85,7 @@ export default function Home() {
     const anchorProvider = getAnchorProvider();
     const SolhotDapp = getSolhot(anchorProvider);
     try {
-      const temp = await SolhotDapp.account.Record.all();
+      const temp = await SolhotDapp.account.record.all();
       setrecords(temp);
     } catch (e) {
       alert(e);
@@ -319,7 +319,7 @@ export type Solhot = {
 	];
 	accounts: [
 	  {
-		name: "Record";
+		name: "record";
 		type: {
 		  kind: "struct";
 		  fields: [
