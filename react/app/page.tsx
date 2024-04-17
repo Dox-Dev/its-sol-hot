@@ -337,7 +337,7 @@ export type Solhot = {
 	
 };
 
-export const Solhot_IDL: Solhot = {
+const Solhot_IDL: Solhot = {
 	"version": "0.1.0",
 	"name": "solhot",
 	"instructions": [
